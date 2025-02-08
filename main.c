@@ -1,5 +1,3 @@
-#define FP fireballs.particles
-
 #include <stdio.h>
 #include <stdlib.h>
 #include "raylib.h"
@@ -20,8 +18,8 @@ int main(void)
 
     InitWindow(screenWidth, screenHeight, "Window Title");
 
-    Pool fireballs = NewPool(poolsize, 0, "fireballs.frag");
-    Pool *fptr = &fireballs;
+    Pool fb = NewPool(poolsize, 0, "fireballs.frag");
+    Pool *fptr = &fb;
     Camera camera = { 0 };
     camera.position = (Vector3){ 0.0f, 0.0f, 5.0f };
     camera.target = (Vector3){ 0.0f, 0.0f, 0.0f };
@@ -41,7 +39,7 @@ int main(void)
             lastTick = GetTime();
             if(active<poolsize)
             {
-                if(FP[active].visible == false)
+                if(fb.parts[active].visible == false)
                 {
                     int ct = GetRandomValue(200, 600);
                     int cb = (ct>510) ? ct-510 : 0;
@@ -50,7 +48,7 @@ int main(void)
                     float newSize = (float)GetRandomValue(50, 300)/500.0f;
                     float newVX = (float)GetRandomValue(18, 22)/100.0f;
                     float newVY = (float)GetRandomValue(8, 12)/100.0f;
-                    setParticle(fptr, active, -20.0, 0.0, newVX, newVY, newSize, (Colour){ cr,cg,cb,255 });
+                    setPart(fptr, active, -20.0, 0.0, newVX, newVY, newSize, (Colour){ cr,cg,cb,255 });
                 }
                 active+=1;
             }  
@@ -58,30 +56,29 @@ int main(void)
         BeginDrawing();
             ClearBackground(BLACK);
             BeginMode3D(camera);
-               DrawModel(fireballs.model, position, 1.0f, WHITE);
+               DrawModel(fb.model, position, 1.0f, WHITE);
             EndMode3D();
             DrawFPS(10, 10);
         EndDrawing();
 
         for (int i = 0; i < active; i++)
         {
-            FP[i].position.x += FP[i].velocity.x;
-            FP[i].position.y += FP[i].velocity.y;
-            //FP[i].velocity.x +=(float)GetRandomValue(-1, 1)/5000.0f;
-            FP[i].velocity.y -=0.005;
-            if(FP[i].size<5){FP[i].size += 0.005;}
-            if(FP[i].color.g<200){FP[i].color.g += 0.5;}
-            if(FP[i].color.b<55){FP[i].color.b += 0.5;}
-            if ((FP[i].position.x + FP[i].size) > 22) {FP[i].velocity.x *= -1;FP[i].position.x=22-(FP[i].size);}
-            if ((FP[i].position.x ) < -22) {FP[i].velocity.x *= -1;FP[i].position.x=-22;}
-            if ((FP[i].position.y + FP[i].size) > 22) {FP[i].velocity.y *= -1;FP[i].position.y=22-(FP[i].size);}
-            if ((FP[i].position.y ) < -22) {FP[i].velocity.y *= -0.9;FP[i].position.y=-22;}
+            fb.parts[i].position.x += fb.parts[i].velocity.x;
+            fb.parts[i].position.y += fb.parts[i].velocity.y;
+            fb.parts[i].velocity.y -=0.005;
+            if(fb.parts[i].size<5){fb.parts[i].size += 0.005;}
+            if(fb.parts[i].color.g<200){fb.parts[i].color.g += 0.5;}
+            if(fb.parts[i].color.b<55){fb.parts[i].color.b += 0.5;}
+            if ((fb.parts[i].position.x + fb.parts[i].size) > 22) {fb.parts[i].velocity.x *= -1;fb.parts[i].position.x=22-(fb.parts[i].size);}
+            if ((fb.parts[i].position.x ) < -22) {fb.parts[i].velocity.x *= -1;fb.parts[i].position.x=-22;}
+            if ((fb.parts[i].position.y + fb.parts[i].size) > 22) {fb.parts[i].velocity.y *= -1;fb.parts[i].position.y=22-(fb.parts[i].size);}
+            if ((fb.parts[i].position.y ) < -22) {fb.parts[i].velocity.y *= -0.9;fb.parts[i].position.y=-22;}
         }
         UpdatePool(fptr);
     }
 
-    free(FP);
-    UnloadModel(fireballs.model);
+    free(fb.parts);
+    UnloadModel(fb.model);
     CloseWindow();
     return 0;
 }
