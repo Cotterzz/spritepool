@@ -77,8 +77,7 @@ int main(void)
         UpdatePool(fptr);
     }
 
-    free(fb.parts);
-    UnloadModel(fb.model);
+    FreePool(fptr);
     CloseWindow();
     return 0;
 }

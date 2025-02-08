@@ -1,3 +1,5 @@
+#define MAX_POOLS 10
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "raylib.h"
@@ -26,6 +28,9 @@ typedef struct Pool {
     Part *parts;
     bool visible;
 } Pool;
+
+Pool* pools[MAX_POOLS];
+int numberOfPools = 0;
 
 Pool NewPool(int size, char *vert, char *frag){
     Pool newPool;
@@ -101,4 +106,10 @@ void UpdatePool(Pool *pool){
     SetTexcoordsToMesh(pool);
     UpdateMeshBuffer(pool->mesh, 0, pool->mesh.vertices, sizeof(float) * pool->mesh.vertexCount * 3, 0);
     UpdateMeshBuffer(pool->mesh, 3, pool->mesh.colors, pool->mesh.vertexCount * 4, 0);
+}
+
+void FreePool(Pool *pool){
+    free(pool->parts);
+    UnloadModel(pool->model);
+    UnloadShader(pool->shader);
 }
