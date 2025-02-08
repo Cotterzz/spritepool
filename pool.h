@@ -1,5 +1,3 @@
-#define MAX_POOLS 10
-
 #include <stdio.h>
 #include <stdlib.h>
 #include "raylib.h"
@@ -28,9 +26,6 @@ typedef struct Pool {
     Part *parts;
     bool visible;
 } Pool;
-
-Pool* pools[MAX_POOLS];
-int numberOfPools = 0;
 
 Pool NewPool(int size, char *vert, char *frag){
     Pool newPool;
