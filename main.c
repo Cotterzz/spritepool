@@ -5,28 +5,18 @@
 
 int main(void)
 {
-    // Begin
     const int screenWidth = 800;
     const int screenHeight = 800;
+    InitWindow(screenWidth, screenHeight, "Window Title");
 
     float interval = 0.001;
     float lastTick = GetTime();
-
     int active = 0;
-
     int poolsize = 1500;
-
-    InitWindow(screenWidth, screenHeight, "Window Title");
 
     Pool fb = NewPool(poolsize, 0, "fireballs.frag");
     Pool *fptr = &fb;
-    Camera camera = { 0 };
-    camera.position = (Vector3){ 0.0f, 0.0f, 5.0f };
-    camera.target = (Vector3){ 0.0f, 0.0f, 0.0f };
-    camera.up = (Vector3){ 0.0f, 1.0f, 0.0f };
-    camera.fovy = 50.0f;
-    camera.projection = CAMERA_ORTHOGRAPHIC;
-    Vector3 position = { 0.0f, 0.0f, 0.0f };
+    Camera camera = PoolCamera();
 
     SetTargetFPS(120);
 
@@ -53,26 +43,26 @@ int main(void)
                 active+=1;
             }  
         }
-        BeginDrawing();
+         BeginDrawing();
             ClearBackground(BLACK);
             BeginMode3D(camera);
-               DrawModel(fb.model, position, 1.0f, WHITE);
+               DrawPool(fptr);
             EndMode3D();
             DrawFPS(10, 10);
         EndDrawing();
 
         for (int i = 0; i < active; i++)
         {
-            fb.parts[i].position.x += fb.parts[i].velocity.x;
-            fb.parts[i].position.y += fb.parts[i].velocity.y;
-            fb.parts[i].velocity.y -=0.005;
+            fb.parts[i].pos.x += fb.parts[i].vel.x;
+            fb.parts[i].pos.y += fb.parts[i].vel.y;
+            fb.parts[i].vel.y -=0.005;
             if(fb.parts[i].size<5){fb.parts[i].size += 0.005;}
             if(fb.parts[i].color.g<200){fb.parts[i].color.g += 0.5;}
             if(fb.parts[i].color.b<55){fb.parts[i].color.b += 0.5;}
-            if ((fb.parts[i].position.x + fb.parts[i].size) > 22) {fb.parts[i].velocity.x *= -1;fb.parts[i].position.x=22-(fb.parts[i].size);}
-            if ((fb.parts[i].position.x ) < -22) {fb.parts[i].velocity.x *= -1;fb.parts[i].position.x=-22;}
-            if ((fb.parts[i].position.y + fb.parts[i].size) > 22) {fb.parts[i].velocity.y *= -1;fb.parts[i].position.y=22-(fb.parts[i].size);}
-            if ((fb.parts[i].position.y ) < -22) {fb.parts[i].velocity.y *= -0.9;fb.parts[i].position.y=-22;}
+            if ((fb.parts[i].pos.x + fb.parts[i].size) > 22) {fb.parts[i].vel.x *= -1;fb.parts[i].pos.x=22-(fb.parts[i].size);}
+            if ((fb.parts[i].pos.x ) < -22) {fb.parts[i].vel.x *= -1;fb.parts[i].pos.x=-22;}
+            if ((fb.parts[i].pos.y + fb.parts[i].size) > 22) {fb.parts[i].vel.y *= -1;fb.parts[i].pos.y=22-(fb.parts[i].size);}
+            if ((fb.parts[i].pos.y ) < -22) {fb.parts[i].vel.y *= -0.9;fb.parts[i].pos.y=-22;}
         }
         UpdatePool(fptr);
     }
