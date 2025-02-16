@@ -23,7 +23,7 @@ typedef struct Pool {
     bool visible;
 } Pool;
 
-//Pool NewPool(int size, char *vert, char *frag);
+Pool NewPool(int size, const char *vert, const char *frag);
 Camera PoolCamera();
 void DrawPool(Pool *pool);
 void SetTexcoordsToMesh(Pool *pool);
