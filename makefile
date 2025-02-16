@@ -8,7 +8,7 @@ else
 endif
 CC = gcc
 CFLAGS = -std=c17 -Wall -v
-ifeq (PLATFORM_OS,WINDOWS)
+ifeq ($(PLATFORM_OS),WINDOWS)
     LDFLAGS = -lraylib -lgdi32 -lwinmm
     EXE = $(basename $(notdir $(CURDIR))).exe
 else
